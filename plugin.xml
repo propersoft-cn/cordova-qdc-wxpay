@@ -71,6 +71,12 @@
         </dict>
       </array>
     </config-file>
+     <!--ios9 需要配置这个来打开微信app来支付 -->
+     <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+     	<array>
+            <string>weixin</string>
+         </array>
+    </config-file>
 
     <!-- Plugin source code -->
     <header-file src="src/ios/CDVWxpay.h" />
