@@ -64,7 +64,7 @@ void swizzleMethod(Class c, SEL originalSelector)
         NSString *appId = [self.viewController.settings objectForKey:@"wechatappid"];
         if (appId)
         {
-            CDVWxpay *wxpayPlugin = [self.viewController getCommandInstance:@"Wxpay"];
+            CDVWxpay *wxpayPlugin = [self.viewController getCommandInstance:@"WeixinPay"];
             [wxpayPlugin registerApp:appId];
         }
     }
@@ -76,5 +76,26 @@ void swizzleMethod(Class c, SEL originalSelector)
 {
     return YES;
 }
+
+
+
+-(CDVWxpay*) getWxpayPlugin{
+    CDVWxpay *wxpayPlugin = [self.viewController getCommandInstance:@"WeixinPay"];
+    return wxpayPlugin;
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+{
+    return  [WXApi handleOpenURL:url delegate:[self getWxpayPlugin]];
+    
+}
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return  [WXApi handleOpenURL:url delegate:[self getWxpayPlugin]];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [WXApi handleOpenURL:url delegate:[self getWxpayPlugin]];
+}
+
 
 @end

@@ -4,7 +4,7 @@
   id="cordova-plugin-proper-qdc-wxpay"
   version="1.0.0">
   <name>WeixinPay</name>
-
+<preference name="WECHAT_APPID"  />
   <js-module src="www/wxpay.js" name="wxpay">
     <clobbers target="wxpay" />
   </js-module>
@@ -50,7 +50,9 @@
 
   <!-- ios -->
   <platform name="ios">
+  	
     <config-file target="config.xml" parent="/*">
+    	<preference name="wechatappid" value="$WECHAT_APPID" />
       <feature name="WeixinPay">
         <param name="ios-package" value="CDVWxpay"/>
         <param name="onload" value="true" />
@@ -66,7 +68,7 @@
           <string>wechat</string>
           <key>CFBundleURLSchemes</key>
           <array>
-            <string>wxbc45c870bddd35df</string>
+            <string>$WECHAT_APPID</string>
           </array>
         </dict>
       </array>
