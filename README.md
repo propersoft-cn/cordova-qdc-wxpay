@@ -3,29 +3,7 @@
 
 * 2015.06.30 微信支付Android及IOS版集成，初步完成
 * 2015.06.26 微信Android SDK【2014.12.12】
-
-# 1. Android客户端安装
-开发工程下执行以下命令导入本插件：
-
-	$ ionic plugin add https://github.com/mrwutong/cordova-qdc-wxpay.git
-
-已安装插件查看：
-
-	$ionic plugin list
-
-
-执行以下命令删本插件：
-
-	# 【com.qdc.plugins.wxpay】是插件ID，不是插件文件夹名
-	$ionic plugin rm com.qdc.plugins.wxpay
-
-## 1.1 Android开发环境导入--Eclipse
-导入路径：开发工程->platform->android
-
-## 1.2 IOS开发环境导入--Xcode
-导入路径：开发工程->platform->ios
-
-确认没有编译错误。
+* 2016.09.13   ios SDK1.7.3
 
 ## 1.3 JS调用说明
 

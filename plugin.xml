@@ -65,7 +65,7 @@
           <key>CFBundleTypeRole</key>
           <string>Editor</string>
           <key>CFBundleURLName</key>
-          <string>wechat</string>
+          <string>weixin</string>
           <key>CFBundleURLSchemes</key>
           <array>
             <string>$WECHAT_APPID</string>
@@ -97,6 +97,8 @@
     <framework src="SystemConfiguration.framework" />
     <framework src="Security.framework" />
     <framework src="libstdc++.6.dylib" />
+    <framework src="CoreTelephony.framework" />
+   
   </platform>
 
 </plugin>
