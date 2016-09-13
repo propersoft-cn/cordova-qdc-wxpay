@@ -80,9 +80,9 @@
             return ;
         }
         sign = [params objectForKey:@"sign"];
-
-        // 向微信注册
-        [WXApi registerApp:appid];
+		
+        // 在应用启动时会向微信注册，这里取消注册
+        //[WXApi registerApp:appid];
         
         if (![WXApi isWXAppInstalled]) {
             [self failWithCallbackID:command.callbackId withMessage:@"未安装微信"];
@@ -105,9 +105,6 @@
         // save the callback id
         self.currentCallbackId = command.callbackId;
         
-        CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"调起成功"];
-        
-        [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
     }];
 }
 
@@ -129,69 +126,37 @@
 {
     NSLog(@"%@", req);
 }
-
+- (NSString *) jsonStringWithDictionary:(NSDictionary *) dictionary {
+    
+    NSString *jsonString = nil;
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&error];
+    if (error) {
+        NSLog(@"Got an error: %@", error);
+        jsonString = nil;
+    } else {
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    return jsonString;
+}
 - (void)onResp:(BaseResp *)resp
 {
-    BOOL success = NO;
-    NSString *message = @"Unknown";
+   
+    CDVPluginResult *commandResult = nil;
+    NSMutableDictionary* dicRtn=[[NSMutableDictionary alloc]init];
+    [dicRtn setValue:[NSNumber numberWithInteger:resp.errCode] forKey:@"code"];
+    NSString *errStr=@"";
+    if(resp.errStr!=nil){
+        errStr=resp.errStr;
+    }
+    [dicRtn setValue:errStr forKey:@"errStr"];
+    NSString *strMsg = [self jsonStringWithDictionary:dicRtn];
+    commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:strMsg];
     
-    switch (resp.errCode)
-    {
-        case WXSuccess:
-            success = YES;
-            break;
-            
-        case WXErrCodeCommon:
-            message = @"普通错误类型";
-            break;
-            
-        case WXErrCodeUserCancel:
-            message = @"用户点击取消并返回";
-            break;
-            
-        case WXErrCodeSentFail:
-            message = @"发送失败";
-            break;
-            
-        case WXErrCodeAuthDeny:
-            message = @"授权失败";
-            break;
-            
-        case WXErrCodeUnsupport:
-            message = @"微信不支持";
-            break;
-    }
     
-    if (success)
-    {
-        if ([resp isKindOfClass:[PayResp class]])
-        {
-            NSString *strMsg = [NSString stringWithFormat:@"支付结果：retcode = %d, retstr = %@", resp.errCode,resp.errStr];
-            
-            CDVPluginResult *commandResult = nil;
-            
-            if (resp.errCode == 0)
-            {
-                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:strMsg];
-            }
-            else
-            {
-                commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:strMsg];
-            }
-            
-            [self.commandDelegate sendPluginResult:commandResult callbackId:self.currentCallbackId];
-        }
-        else
-        {
-            NSLog(@"回调不是支付类型");
-
-            [self successWithCallbackID:self.currentCallbackId];
-        }
-    }
-    else
-    {
-        [self failWithCallbackID:self.currentCallbackId withMessage:message];
-    }
+    [self.commandDelegate sendPluginResult:commandResult callbackId:self.currentCallbackId];
     
     self.currentCallbackId = nil;
 }
