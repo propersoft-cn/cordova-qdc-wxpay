@@ -57,11 +57,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
     	}
 
         PluginResult result = null;
-        if (0 == resp.errCode) {
-          result = new PluginResult(PluginResult.Status.OK, json.toString());
-        } else {
-          result = new PluginResult(PluginResult.Status.ERROR, json.toString());
-        }
+        result = new PluginResult(PluginResult.Status.OK, json.toString());
         result.setKeepCallback(true);
         WeixinPay.cbContext.sendPluginResult(result);
     }
